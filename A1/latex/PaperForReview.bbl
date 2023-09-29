@@ -1,0 +1,38 @@
+\begin{thebibliography}{1}\itemsep=-1pt
+
+\bibitem{bottou2012stochastic}
+L{\'e}on Bottou.
+\newblock Stochastic gradient descent tricks.
+\newblock In {\em Neural Networks: Tricks of the Trade: Second Edition}, pages 421--436. Springer, 2012.
+
+\bibitem{glorot2011deep}
+Xavier Glorot, Antoine Bordes, and Yoshua Bengio.
+\newblock Deep sparse rectifier neural networks.
+\newblock In {\em Proceedings of the fourteenth international conference on artificial intelligence and statistics}, pages 315--323. JMLR Workshop and Conference Proceedings, 2011.
+
+\bibitem{rosenblatt1958perceptron}
+Frank Rosenblatt.
+\newblock The perceptron: a probabilistic model for information storage and organization in the brain.
+\newblock {\em Psychological review}, 65(6):386, 1958.
+
+\bibitem{smith1988using}
+Jack~W Smith, James~E Everhart, WC Dickson, William~C Knowler, and Robert~Scott Johannes.
+\newblock Using the adap learning algorithm to forecast the onset of diabetes mellitus.
+\newblock In {\em Proceedings of the annual symposium on computer application in medical care}, page 261. American Medical Informatics Association, 1988.
+
+\bibitem{suthaharan2016support}
+Shan Suthaharan and Shan Suthaharan.
+\newblock Support vector machine.
+\newblock {\em Machine learning models and algorithms for big data classification: thinking with examples for effective learning}, pages 207--235, 2016.
+
+\bibitem{werbos1990backpropagation}
+Paul~J Werbos.
+\newblock Backpropagation through time: what it does and how to do it.
+\newblock {\em Proceedings of the IEEE}, 78(10):1550--1560, 1990.
+
+\bibitem{wright1995logistic}
+Raymond~E Wright.
+\newblock Logistic regression.
+\newblock 1995.
+
+\end{thebibliography}

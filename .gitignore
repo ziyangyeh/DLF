@@ -1,4 +1,7 @@
 .vscode
+.DS_Store
 
 A1/mkdir
 A1/data
+
+*.zip
