@@ -95,7 +95,7 @@ where $\theta$ is weights, $x$ is input features, $g(z)$ is the Sigmoid function
 \begin{figure}[t]
 	\centering
 	\includegraphics[width=\columnwidth]{svm-lr}
-	\caption{Right is a classic linear classifier, left is SVM with hard-margin}
+	\caption{Right is a classic linear classifier, left is SVM with hard-margin.}
 	\label{fig:svm-lr}
 \end{figure}
 \noindent\textbf{Support Vector Machine} (SVM) and perceptron are both used for classification, and they both use the sign function as the decision function. SVM optimizes its parameters by maximizing the minimum distance of support vectors from the hyperplane\cite{suthaharan2016support}.\\
@@ -106,7 +106,7 @@ where $\theta$ is weights, $x$ is input features, $g(z)$ is the Sigmoid function
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\columnwidth]{mlp}
-	\caption{Example of a short caption, which should be centered.}
+	\caption{Graph shows a MLP has 2 hidden layers.}
 	\label{fig:mlp}
 \end{figure}
 \section{Dataset and Processing}
@@ -140,7 +140,7 @@ where $X^{\prime}_i$ is the nomalized value, $\overline{X}_i$ is the mean value 
 	\centering
 	\subfloat[]{\label{fig:neuron}\includegraphics[width=\columnwidth]{neuron}}
 	\subfloat[]{\label{fig:mcp}\includegraphics[width=\columnwidth]{mcp}}
-	\caption{Example of a short caption, which should be centered.}
+	\caption{Left is a biological neuron, right is a McCulloch-Pitts neuron}
 	\label{fig:short}
 \end{figure*}
 Perceptron, proposed by Rosenblatt in 1957, is a simple abstraction of biological neurons and serves as the foundation for neural networks and support vector machines. It is a linear classification model for binary classification, where the input consists of feature vectors for instances, and the output assigns a class label: $+1$ for the positive class and $-1$ for the negative class\cite{rosenblatt1958perceptron}. Perceptron is a discriminative model with the goal of separating positive and negative instances using a separating hyperplane. There is not a unique solution for the perceptron's hyperplane; the perceptron algorithm aims to find one feasible separation. When extended to high-dimensional spaces, it seeks a hyperplane.
@@ -244,20 +244,23 @@ Accuracy refers to the percentage of correct predictions out of the total sample
 \begin{equation}
 	Accuracy = \frac{TP+TN}{TP+TN+FP+FN}
 \end{equation}
-Precision represents the probability that a sample predicted as positive is actually positive. Precision measures the accuracy of positive predictions, while accuracy considers both positive and negative predictions.
+\indent Precision represents the probability that a sample predicted as positive is actually positive. Precision measures the accuracy of positive predictions, while accuracy considers both positive and negative predictions.
 \begin{equation}
 	Precision = \frac{TP}{TP+FP}
 \end{equation}
-Recall refers to the probability that an actual positive sample is predicted as positive. Higher recall indicates a higher probability of correctly identifying actual positive cases.
+\indent Recall refers to the probability that an actual positive sample is predicted as positive. Higher recall indicates a higher probability of correctly identifying actual positive cases.
 \begin{equation}
 	Recall = \frac{TP}{TP+FN}
 \end{equation}
-The F1 score is designed to balance precision and recall, finding a trade-off point between the two.
+\indent The F1 score is designed to balance precision and recall, finding a trade-off point between the two.
 \begin{equation}
 	F1-Score = \frac{2\times Precision\times Recall}{Precision+Recall}
 \end{equation}
 \\
-I use above metrics to do the experiments. Specifically, I also employed K-fold cross-validation, setting K to vary between 3 and 5 to test the performance of different algorithms. The results are as follows:
+\indent I used the above-mentioned metrics for experiment. In terms of algorithms and models, apart from the perceptron itself, I also utilized logistic regression, linear SVM, rbf SVM, and MLP for comparison and expansion.
+Specifically, I also employed K-fold cross-validation, setting K to vary between 3 and 5 to test the performance of different algorithms. I primarily used scikit-learn for this, after extensive hyperparameter tuning. I've omitted most of the process and only kept the results. The final results are as follows:
+~\\
+~\\
 \begin{tabular}{llrrrr}
 	\toprule
 	method     & accuracy & precision & recall   & f1       \\
@@ -269,15 +272,16 @@ I use above metrics to do the experiments. Specifically, I also employed K-fold 
 	mlp        & 0.916667 & 0.928571  & 0.824627 & 0.873518 \\
 	\bottomrule
 \end{tabular}
-From the table, it can be observed that the perceptron has the poorest performance across all metrics, with logistic regression performing slightly better. Linear and kernel-based SVMs exhibit significantly better performance than the perceptron, while MLP outperforms all other methods\dots
+~\\
+\indent From the table, it can be observed that the perceptron has the poorest performance across all metrics, with logistic regression performing slightly better. Linear and kernel-based SVMs exhibit significantly better performance than the perceptron, while MLP outperforms all other methods.
 
 \section{Conclusion}
 One of the main drawbacks of the perceptron is that it can only address linearly separable problems, meaning it cannot handle situations where there are multiple non-linear decision boundaries within the dataset. Additionally, perceptrons are sensitive to noise and may perform poorly when noise is present or when data is not entirely linearly separable.
 
-%%%%%%%%% REFERENCES
-{\small
-	\bibliographystyle{ieee_fullname}
-	\bibliography{egbib}
-}
+	%%%%%%%%% REFERENCES
+	{\small
+		\bibliographystyle{ieee_fullname}
+		\bibliography{egbib}
+	}
 
 \end{document}
