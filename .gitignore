@@ -1,7 +1,11 @@
 .vscode
 .DS_Store
+__pycache__
 
-A1/mkdir
+lightning_logs
 A1/data
+A2/data
+
 
 *.zip
+.lr_find*
