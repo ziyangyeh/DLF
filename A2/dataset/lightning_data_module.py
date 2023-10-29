@@ -8,24 +8,75 @@ from lightning import LightningDataModule
 from omegaconf import OmegaConf
 from torch.utils.data import DataLoader
 
-from .mushroom_dataset import MushroomDataset, MushroomDatasetTriplet
+from .bird_dataset import BirdDataset, BirdDatasetTriplet
 
 
 def image_aug(image_size: Optional[int] = None):
     pre = [
-        A.ShiftScaleRotate(shift_limit=0.05, scale_limit=0.05, rotate_limit=15, p=0.5),
-        # A.RandomCrop(height=128, width=128),
-        A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.5),
-        A.RandomBrightnessContrast(p=0.5),
-        A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-        ToTensorV2(),
+        A.RandomResizedCrop(image_size, image_size),
+        A.HorizontalFlip(),
     ]
+    # pre = [
+    #     A.ShiftScaleRotate(),
+    #     A.Transpose(),
+    #     A.SafeRotate(),
+    #     A.HorizontalFlip(),
+    #     A.VerticalFlip(),
+    #     A.PixelDropout(),
+    #     A.OneOf(
+    #         [
+    #             A.OpticalDistortion(),
+    #             A.GridDistortion(),
+    #             A.PiecewiseAffine(),
+    #         ],
+    #         p=0.5,
+    #     ),
+    #     A.OneOf(
+    #         [
+    #             A.ISONoise(),
+    #             A.GaussNoise(),
+    #         ],
+    #         p=0.5,
+    #     ),
+    #     A.OneOf(
+    #         [
+    #             A.MotionBlur(),
+    #             A.MedianBlur(blur_limit=3),
+    #             A.Blur(blur_limit=3),
+    #         ],
+    #         p=0.5,
+    #     ),
+    #     A.OneOf(
+    #         [
+    #             A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15),
+    #             A.HueSaturationValue(),
+    #             A.ColorJitter(),
+    #         ],
+    #         p=0.5,
+    #     ),
+    #     A.OneOf(
+    #         [
+    #             A.RandomFog(),
+    #             A.RandomRain(),
+    #         ],
+    #         p=0.5,
+    #     ),
+    #     A.OneOf(
+    #         [
+    #             A.CLAHE(clip_limit=2),
+    #             A.Sharpen(),
+    #             A.Emboss(),
+    #             A.RandomBrightnessContrast(),
+    #         ],
+    #         p=0.5,
+    #     ),
+    # ]
+
     post = [A.Normalize(), ToTensorV2()]
-    if image_size:
-        post.insert(0, A.Resize(*(image_size, image_size)))
+    # if image_size:
+    #     post.insert(0, A.Resize(*(image_size, image_size)))
     transforms = A.Compose(pre + post)
     return transforms
-
 
 class LitDataModule(LightningDataModule):
     def __init__(
@@ -33,26 +84,17 @@ class LitDataModule(LightningDataModule):
         cfg: OmegaConf,
     ):
         super(LitDataModule, self).__init__()
-        self.dataset = (
-            MushroomDatasetTriplet if cfg.dataset.triplet else MushroomDataset
-        )
+        self.save_hyperparameters()
+        self.dataset = BirdDatasetTriplet if cfg.dataset.triplet else BirdDataset
         self.dataframe = pd.read_csv(cfg.dataset.csv_path)
-        self.label_map = {
-            k: idx for idx, k in enumerate(np.loadtxt(cfg.dataset.label_map, dtype=str))
-        }
+        self.label_map = {k: idx for idx, k in enumerate(np.sort(np.loadtxt(cfg.dataset.label_map, dtype=str)))}
         self.image_size = cfg.dataset.image_size
         self.batch_size = cfg.dataloader.batch_size
         self.num_workers = cfg.dataloader.num_workers
-        self.transform = (
-            image_aug(cfg.dataset.image_size) if cfg.dataset.transform else None
-        )
-
-        self.save_hyperparameters()
+        self.transform = image_aug(cfg.dataset.image_size) if cfg.dataset.transform else None
         # self.save_hyperparameters(ignore=["cfg"])
-
     def get_num_classes(self):
         return len(self.label_map)
-
     def setup(self, stage: Optional[str] = None):
         if stage == "fit" or stage is None:
             self.train_dataset = self.dataset(
@@ -67,28 +109,24 @@ class LitDataModule(LightningDataModule):
                 label_map=self.label_map,
                 train_val="val",
                 image_size=self.image_size,
-                transforms=self.transform,
+                # transforms=self.transform,
             )
         if stage == "test" or stage is None:
             self.test_dataset = self.dataset(
                 dataframe=self.dataframe,
                 label_map=self.label_map,
                 image_size=self.image_size,
-                transforms=self.transform,
+                # transforms=self.transform,
             )
-
     def train_dataloader(self) -> DataLoader:
         return self._dataloader(self.train_dataset, train=True)
-
     def val_dataloader(self) -> DataLoader:
         return self._dataloader(self.val_dataset)
-
     def test_dataloader(self) -> DataLoader:
         return self._dataloader(self.test_dataset)
-
     def _dataloader(
         self,
-        dataset: Union[MushroomDataset, MushroomDatasetTriplet],
+        dataset: Union[BirdDataset, BirdDatasetTriplet],
         train: Optional[bool] = None,
     ) -> DataLoader:
         return DataLoader(
@@ -99,7 +137,6 @@ class LitDataModule(LightningDataModule):
             pin_memory=True,
             drop_last=True if train else False,
         )
-
 
 if __name__ == "__main__":
     cfg = OmegaConf.load("config/default.yaml")

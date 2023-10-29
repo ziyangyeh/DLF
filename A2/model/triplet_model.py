@@ -3,7 +3,7 @@ from typing import Optional
 import timm
 import torch
 import torch.nn as nn
-from einops import pack, unpack
+from einops import pack, rearrange, unpack
 
 from .positional_encoding import PositionalEncoding1D
 
@@ -70,9 +70,18 @@ class TripletModel(nn.Module):
     def _forward_triplet_train(self, anchor, positive, negative):
         x = [self.encoder(item) if self.skip_connection else self.encoder(item)[-1] for item in [anchor, positive, negative]]
         if self.skip_connection:
-            x = [torch.concat([self.pool_flat(feats) for feats in feats_lst], dim=1) for feats_lst in x]
+            x = [
+                torch.concat(
+                    [
+                        self.pool_flat(rearrange(feats, "b h w c -> b c h w")) if feats.shape[1] == feats.shape[2] else self.pool_flat(feats)
+                        for feats in feats_lst
+                    ],
+                    dim=1,
+                )
+                for feats_lst in x
+            ]
         else:
-            x = [self.pool_flat(item) for item in x]
+            x = [self.pool_flat(rearrange(feats, "b h w c -> b c h w")) if feats.shape[1] == feats.shape[2] else self.pool_flat(feats) for feats in x]
 
         # Embedding
         x = [self.embedding(item) for item in x]
@@ -82,9 +91,9 @@ class TripletModel(nn.Module):
         # Multi-head Attention
         if self.mha:
             x = [self.mha(item, item, item)[0] for item in x]
+        x = [self.head(item) for item in x]
         anchor, positive, negative = x
-        x = self.head(anchor)
-        return x, anchor, positive, negative
+        return anchor, positive, negative
     def _forward_triplet(self, anchor, positive=None, negative=None):
         if positive == None and negative == None:
             return self._forward_triplet_infer(anchor)

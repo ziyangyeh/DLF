@@ -1,7 +1,7 @@
 .vscode
 .DS_Store
 __pycache__
-
+checkpoints
 lightning_logs
 A1/data
 A2/data

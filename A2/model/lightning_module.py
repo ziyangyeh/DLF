@@ -15,6 +15,7 @@ from .triplet_model import TripletModel
 class LitModule(LightningModule):
     def __init__(self, model_cfg: OmegaConf, train_cfg: Optional[OmegaConf] = None) -> None:
         super(LitModule, self).__init__()
+        self.save_hyperparameters()
         self.opt_cfg = train_cfg
         self.batch_size = train_cfg.batch_size
         self.triplet = model_cfg.triplet.use
@@ -28,10 +29,17 @@ class LitModule(LightningModule):
             mha=model_cfg.triplet.multi_head_attention,
             dropout=model_cfg.encoder.drop_rate,
         )
-        if model_cfg.encoder.freeze_encoder:
-            for k, item in dict(self.model.encoder.named_children()).items():
-                if k != "global_pool" or k != "fc":
-                    item.requires_grad = False
+        if model_cfg.encoder.freeze_encoder and not self.triplet:
+            for name, para in self.model.named_parameters():
+                if "head" not in name:
+                    para.requires_grad_(False)
+                else:
+                    print("training {}".format(name))
+        elif model_cfg.encoder.freeze_encoder and self.triplet:
+            for name, para in self.model.encoder.named_parameters():
+                para.requires_grad_(False)
+            print("encoder is freezed.")
+        # self.model = torch.compile(self.model)
         if self.triplet:
             distance_fn = nn.PairwiseDistance() if model_cfg.triplet.distance == "l2" else nn.CosineSimilarity()
             self.triplet_loss_fn = nn.TripletMarginWithDistanceLoss(distance_function=distance_fn, swap=True)
@@ -41,7 +49,6 @@ class LitModule(LightningModule):
         self.recall_fn = Recall(task="multiclass", num_classes=model_cfg.num_classes)
         self.specificity_fn = Specificity(task="multiclass", num_classes=model_cfg.num_classes)
         self.f1score_fn = F1Score(task="multiclass", num_classes=model_cfg.num_classes)
-        self.save_hyperparameters()
         # self.save_hyperparameters(ignore=["cfg"])
     def forward(self, X: Dict[str, torch.Tensor]) -> torch.Tensor:
         if self.triplet:
@@ -51,8 +58,9 @@ class LitModule(LightningModule):
         return outputs
     def configure_optimizers(self):
         self.lr = self.opt_cfg.optimizer.lr
+        param_lst = [_params for _params in self.parameters() if _params.requires_grad]
         optimizer = AdamW(
-            self.parameters(),
+            param_lst,
             lr=self.lr,
             weight_decay=self.opt_cfg.optimizer.weight_decay,
         )
@@ -76,8 +84,8 @@ class LitModule(LightningModule):
     def _step(self, batch: Dict[str, torch.Tensor], step: str) -> torch.Tensor:
         outputs = self(batch)
         if self.triplet:
-            outputs, anchors, positives, negatives = outputs
-            _triplet_loss = self.triplet_loss_fn(anchors, positives, negatives)
+            outputs, positives, negatives = outputs
+            _triplet_loss = self.triplet_loss_fn(outputs, positives, negatives)
             self.log(f"{step}_triplet_loss", _triplet_loss, sync_dist=True, batch_size=self.batch_size)
             _ce_loss = self.ce_loss_fn(outputs, batch["label"])
             self.log(f"{step}_ce_loss", _ce_loss, sync_dist=True, batch_size=self.batch_size)
@@ -88,7 +96,7 @@ class LitModule(LightningModule):
             self.log(f"{step}_loss", loss, sync_dist=True, prog_bar=True, batch_size=self.batch_size)
         with torch.no_grad():
             _acc = self.accuracy_fn(outputs, batch["label"])
-            self.log(f"{step}_accuracy", _acc, sync_dist=True, batch_size=self.batch_size)
+            self.log(f"{step}_acc", _acc, sync_dist=True, prog_bar=True, batch_size=self.batch_size)
             _prec = self.precision_fn(outputs, batch["label"])
             self.log(f"{step}_precision", _prec, sync_dist=True, batch_size=self.batch_size)
             _recall = self.recall_fn(outputs, batch["label"])

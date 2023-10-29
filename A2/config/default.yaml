@@ -2,40 +2,40 @@ project: "DLF_A2"
 SEED: 42
 model:
   encoder:
-    name: "resnet34"
+    name: "resnet34" # "swin_large_patch4_window7_224"
     pretrained: True
-    freeze_encoder: False
+    freeze_encoder: True
     drop_rate: 0.5
   triplet:
-    use: False # if False, following params will not be unused.
-    skip_connection: False
-    positional_encoding: False
-    multi_head_attention: False
+    use: True # if False, following params will not be unused.
+    skip_connection: True
+    positional_encoding: True
+    multi_head_attention: True
     distance: "cos" # cos, l2
 train:
-  epochs: 50
+  epochs: 20
   accelerator: gpu
   devices: 1
   ddp: False
-  precision: 16-mixed
+  precision: bf16-mixed # 16-mixed
   accumulate_grad_batches: 1
   swa: 
-    use: False # if False, next param will not be used; if True, conflict with "user-defined optimizer"
+    use: False # if False, next param will not be used; if True, conflict with user-defined scheduler
     swa_lr: 1e-3
   optimizer:
-    auto_lr_finder: True # if True, next param will not be used
+    auto_lr_finder: False # if True, next param will not be used
     lr: 1e-3
-    weight_decay: 1e-7
+    weight_decay: 5e-2
   scheduler:
     T_0: 5
     T_mult: 2
     eta_min: 1e-9
 data:
   dataset:
-    csv_path: "data/mushrooms.csv"
-    label_map: "data/mushrooms/mushrooms.txt"
+    csv_path: "data/bird.csv"
+    label_map: "data/bird.txt"
     image_size: 224
     transform: True
   dataloader:
-    batch_size: 64
-    num_workers: 4
+    batch_size: 512
+    num_workers: 8

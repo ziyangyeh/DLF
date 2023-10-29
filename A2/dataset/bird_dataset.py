@@ -8,7 +8,7 @@ from PIL import Image
 from torch.utils.data import Dataset
 
 
-class MushroomDataset(Dataset):
+class BirdDataset(Dataset):
     def __init__(
         self,
         dataframe: pd.DataFrame,
@@ -17,7 +17,7 @@ class MushroomDataset(Dataset):
         image_size: Optional[int] = None,
         transforms: Optional[Callable] = None,
     ) -> None:
-        super(MushroomDataset, self).__init__()
+        super(BirdDataset, self).__init__()
         if train_val:
             flag = False if train_val == "train" else True
             self.dataframe = dataframe[dataframe["is_valid"] == flag]
@@ -45,7 +45,7 @@ class MushroomDataset(Dataset):
         img = self.transforms(image=img)["image"]
         return {"image": img, "label": label, "species": species}
 
-class MushroomDatasetTriplet(MushroomDataset):
+class BirdDatasetTriplet(BirdDataset):
     def __init__(
         self,
         dataframe: pd.DataFrame,
@@ -54,7 +54,7 @@ class MushroomDatasetTriplet(MushroomDataset):
         image_size: int | None = None,
         transforms: Callable[..., Any] | None = None,
     ) -> None:
-        super(MushroomDatasetTriplet, self).__init__(dataframe, label_map, train_val, image_size, transforms)
+        super(BirdDatasetTriplet, self).__init__(dataframe, label_map, train_val, image_size, transforms)
     def __getitem__(self, index) -> Any:
         result = super().__getitem__(index)
         species = result["species"]
@@ -73,12 +73,12 @@ class MushroomDatasetTriplet(MushroomDataset):
         return result
 
 if __name__ == "__main__":
-    label_map = np.loadtxt("data/mushrooms/mushrooms.txt", dtype=str)
+    label_map = np.loadtxt("data/bird.txt", dtype=str)
     label_map = {k: idx for idx, k in enumerate(label_map)}
-    df = pd.read_csv("data/mushrooms.csv")
-    ds = MushroomDataset(df, label_map, "train")
+    df = pd.read_csv("data/bird.csv")
+    ds = BirdDataset(df, label_map, "train")
     # print(ds[0]["image"].shape)
-    ds_t = MushroomDatasetTriplet(df, label_map, "train")
+    ds_t = BirdDatasetTriplet(df, label_map, "train")
     print(ds_t[0]["image"].shape)
     print(ds_t[0]["positive"].shape)
     print(ds_t[0]["negative"].shape)
