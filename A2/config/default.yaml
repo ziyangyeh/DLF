@@ -2,16 +2,15 @@ project: "DLF_A2"
 SEED: 42
 model:
   encoder:
-    name: "resnet34" # "swin_large_patch4_window7_224"
+    name: "vit_tiny_patch16_224" # "vgg19" # "resnet34" # "swin_large_patch4_window7_224" # "vit_tiny_patch16_224"
     pretrained: True
-    freeze_encoder: True
+    freeze_encoder: False
     drop_rate: 0.5
   triplet:
     use: True # if False, following params will not be unused.
-    skip_connection: True
-    positional_encoding: True
-    multi_head_attention: True
+    skip_connection: True # vit does not need this
     distance: "cos" # cos, l2
+    init: "xavier_uniform" # xavier_uniform, xavier_normal, kaiming_uniform, kaiming_normal
 train:
   epochs: 20
   accelerator: gpu
@@ -36,6 +35,7 @@ data:
     label_map: "data/bird.txt"
     image_size: 224
     transform: True
+    aug_level: "easy"
   dataloader:
-    batch_size: 512
+    batch_size: 256
     num_workers: 8

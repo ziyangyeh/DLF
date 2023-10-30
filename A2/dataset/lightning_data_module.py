@@ -1,82 +1,13 @@
 from typing import Optional, Union
 
-import albumentations as A
 import numpy as np
 import pandas as pd
-from albumentations.pytorch import ToTensorV2
 from lightning import LightningDataModule
 from omegaconf import OmegaConf
 from torch.utils.data import DataLoader
 
 from .bird_dataset import BirdDataset, BirdDatasetTriplet
-
-
-def image_aug(image_size: Optional[int] = None):
-    pre = [
-        A.RandomResizedCrop(image_size, image_size),
-        A.HorizontalFlip(),
-    ]
-    # pre = [
-    #     A.ShiftScaleRotate(),
-    #     A.Transpose(),
-    #     A.SafeRotate(),
-    #     A.HorizontalFlip(),
-    #     A.VerticalFlip(),
-    #     A.PixelDropout(),
-    #     A.OneOf(
-    #         [
-    #             A.OpticalDistortion(),
-    #             A.GridDistortion(),
-    #             A.PiecewiseAffine(),
-    #         ],
-    #         p=0.5,
-    #     ),
-    #     A.OneOf(
-    #         [
-    #             A.ISONoise(),
-    #             A.GaussNoise(),
-    #         ],
-    #         p=0.5,
-    #     ),
-    #     A.OneOf(
-    #         [
-    #             A.MotionBlur(),
-    #             A.MedianBlur(blur_limit=3),
-    #             A.Blur(blur_limit=3),
-    #         ],
-    #         p=0.5,
-    #     ),
-    #     A.OneOf(
-    #         [
-    #             A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15),
-    #             A.HueSaturationValue(),
-    #             A.ColorJitter(),
-    #         ],
-    #         p=0.5,
-    #     ),
-    #     A.OneOf(
-    #         [
-    #             A.RandomFog(),
-    #             A.RandomRain(),
-    #         ],
-    #         p=0.5,
-    #     ),
-    #     A.OneOf(
-    #         [
-    #             A.CLAHE(clip_limit=2),
-    #             A.Sharpen(),
-    #             A.Emboss(),
-    #             A.RandomBrightnessContrast(),
-    #         ],
-    #         p=0.5,
-    #     ),
-    # ]
-
-    post = [A.Normalize(), ToTensorV2()]
-    # if image_size:
-    #     post.insert(0, A.Resize(*(image_size, image_size)))
-    transforms = A.Compose(pre + post)
-    return transforms
+from utils import image_aug
 
 class LitDataModule(LightningDataModule):
     def __init__(
@@ -91,7 +22,7 @@ class LitDataModule(LightningDataModule):
         self.image_size = cfg.dataset.image_size
         self.batch_size = cfg.dataloader.batch_size
         self.num_workers = cfg.dataloader.num_workers
-        self.transform = image_aug(cfg.dataset.image_size) if cfg.dataset.transform else None
+        self.transform = image_aug(cfg.dataset.image_size, cfg.dataset.aug_level) if cfg.dataset.transform else None
         # self.save_hyperparameters(ignore=["cfg"])
     def get_num_classes(self):
         return len(self.label_map)

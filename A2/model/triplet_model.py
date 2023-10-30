@@ -5,9 +5,6 @@ import torch
 import torch.nn as nn
 from einops import pack, rearrange, unpack
 
-from .positional_encoding import PositionalEncoding1D
-
-
 class TripletModel(nn.Module):
     def __init__(
         self,
@@ -16,29 +13,30 @@ class TripletModel(nn.Module):
         pretrained: Optional[bool] = None,
         features_only: Optional[bool] = None,
         skip_connection: Optional[bool] = None,
-        pe: Optional[bool] = None,
-        mha: Optional[bool] = None,
-        dropout: Optional[float] = None,
+        dropout: Optional[float] = 0.0,
+        init: Optional[bool] = False,
         **kwargs,
     ) -> None:
         super(TripletModel, self).__init__()
+        self.vit = True if encoder_name.startswith("vit") else False
         self.encoder = timm.create_model(
             model_name=encoder_name,
             pretrained=pretrained,
             num_classes=num_classes,
-            features_only=features_only,
+            features_only=features_only if not self.vit else None,
             drop_rate=dropout,
         )
 
         self.features_only = features_only
         if features_only:
             self.skip_connection = skip_connection
-            feature_info = self.encoder.feature_info
-            last_dim = sum([item["num_chs"] for item in feature_info]) if skip_connection else list(feature_info)[-1]["num_chs"]
-            self.pool_flat = nn.Sequential(nn.AdaptiveAvgPool2d((1, 1)), nn.Flatten())
-            self.embedding = nn.Linear(last_dim, last_dim, bias=False)
-            self.pe = PositionalEncoding1D(last_dim) if pe else nn.Identity()
-            self.mha = nn.MultiheadAttention(embed_dim=last_dim, num_heads=8, bias=False, batch_first=True) if mha else None
+            if not self.vit:
+                feature_info = self.encoder.feature_info
+                last_dim = sum([item["num_chs"] for item in feature_info]) if skip_connection else list(feature_info)[-1]["num_chs"]
+            else:
+                last_dim = self.encoder.head.in_features
+                self.encoder.head = nn.Identity()
+            self.pool_flat = nn.Sequential(nn.AdaptiveAvgPool2d((1, 1)), nn.Flatten()) if not self.vit else nn.Identity()
             self.head = nn.Sequential(
                 nn.Linear(last_dim, 256, bias=False),
                 nn.BatchNorm1d(256),
@@ -49,6 +47,19 @@ class TripletModel(nn.Module):
                 nn.ReLU(inplace=True),
                 nn.Linear(64, num_classes, bias=False),
             )
+            if init:
+                self.init_type = init
+                self.head.apply(self.init_weights)
+    def init_weights(self, m):
+        if isinstance(m, nn.Linear):
+            if self.init_type == "xavier_uniform":
+                torch.nn.init.xavier_uniform_(m.weight)
+            elif self.init_type == "xavier_normal":
+                torch.nn.init.xavier_normal_(m.weight)
+            elif self.init_type == "kaiming_uniform":
+                torch.nn.init.kaiming_uniform_(m.weight)
+            elif self.init_type == "kaiming_normal":
+                torch.nn.init.kaiming_normal_(m.weight)
     def _forward_base(self, X):
         return self.encoder(X)
     def _forward_triplet_infer(self, anchor):
@@ -57,40 +68,29 @@ class TripletModel(nn.Module):
             x = torch.concat([self.pool_flat(feats) for feats in x], dim=1)
         else:
             x = self.pool_flat(x)
-        before = x
-        # Embedding
-        x = self.embedding(x)
-        x = self.pe(x.unsqueeze(-1)).squeeze(-1)
-        # Multi-head Attention
-        if self.mha:
-            x, _ = self.mha(x, x, x)
-        after = x
         x = self.head(x)
-        return x, before, after
+        return x, x, x
     def _forward_triplet_train(self, anchor, positive, negative):
         x = [self.encoder(item) if self.skip_connection else self.encoder(item)[-1] for item in [anchor, positive, negative]]
-        if self.skip_connection:
-            x = [
-                torch.concat(
-                    [
-                        self.pool_flat(rearrange(feats, "b h w c -> b c h w")) if feats.shape[1] == feats.shape[2] else self.pool_flat(feats)
-                        for feats in feats_lst
-                    ],
-                    dim=1,
-                )
-                for feats_lst in x
-            ]
+        if not self.vit:
+            if self.skip_connection:
+                x = [
+                    torch.concat(
+                        [
+                            self.pool_flat(rearrange(feats, "b h w c -> b c h w")) if feats.shape[1] == feats.shape[2] else self.pool_flat(feats)
+                            for feats in feats_lst
+                        ],
+                        dim=1,
+                    )
+                    for feats_lst in x
+                ]
+            else:
+                x = [
+                    self.pool_flat(rearrange(feats, "b h w c -> b c h w")) if feats.shape[1] == feats.shape[2] else self.pool_flat(feats)
+                    for feats in x
+                ]
         else:
-            x = [self.pool_flat(rearrange(feats, "b h w c -> b c h w")) if feats.shape[1] == feats.shape[2] else self.pool_flat(feats) for feats in x]
-
-        # Embedding
-        x = [self.embedding(item) for item in x]
-        x, x_ind = pack(x, "b * c")
-        x = self.pe(x)
-        x = unpack(x, x_ind, "b * c")
-        # Multi-head Attention
-        if self.mha:
-            x = [self.mha(item, item, item)[0] for item in x]
+            x = [self.pool_flat(feats) for feats in x]
         x = [self.head(item) for item in x]
         anchor, positive, negative = x
         return anchor, positive, negative

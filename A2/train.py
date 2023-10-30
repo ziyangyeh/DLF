@@ -25,19 +25,21 @@ def train(cfg: OmegaConf, debug=False):
         dirpath="checkpoints",
         monitor="val_loss",
         mode="min",
-        filename=f"{cfg.model.encoder.name}_{cfg.model.num_classes}_classes_{cfg.train.precision}_f_best_loss",
+        filename=f"{cfg.model.encoder.name}_{cfg.model.num_classes}_classes_{cfg.train.precision}_f_best_loss_" + "{val_loss:.4f}",
         verbose="True",
+        auto_insert_metric_name=False,
     )
-    
+
     acc_model_checkpoint = ModelCheckpoint(
         dirpath="checkpoints",
         monitor="val_acc",
         mode="max",
-        filename=f"{cfg.model.encoder.name}_{cfg.model.num_classes}_classes_{cfg.train.precision}_f_best_acc",
+        filename=f"{cfg.model.encoder.name}_{cfg.model.num_classes}_classes_{cfg.train.precision}_f_best_acc_" + "{val_acc:.4f}",
         verbose="True",
+        auto_insert_metric_name=False,
     )
 
-    callbacks = [loss_model_checkpoint,acc_model_checkpoint]
+    callbacks = [loss_model_checkpoint, acc_model_checkpoint]
     if cfg.train.swa.use:
         swa = StochasticWeightAveraging(swa_lrs=cfg.train.swa.swa_lr, swa_epoch_start=1, avg_fn=None)
         callbacks.append(swa)
@@ -52,7 +54,7 @@ def train(cfg: OmegaConf, debug=False):
         max_epochs=cfg.train.epochs,
         precision=cfg.train.precision,
         accumulate_grad_batches=cfg.train.accumulate_grad_batches,
-        # logger=WandbLogger(project=cfg.project, name=f"{cfg.model.encoder.name}-{cfg.train.precision}"),
+        logger=WandbLogger(project=cfg.project, name=f"{cfg.model.encoder.name}-{cfg.train.precision}"),
     )
     if cfg.train.optimizer.auto_lr_finder:
         tuner = Tuner(trainer)

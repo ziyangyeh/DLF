@@ -1,10 +1,14 @@
 .vscode
 .DS_Store
 __pycache__
+
 checkpoints
 lightning_logs
+wandb
+
 A1/data
 A2/data
+A2/_data
 
 
 *.zip

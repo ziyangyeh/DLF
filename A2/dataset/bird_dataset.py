@@ -7,7 +7,6 @@ from albumentations.pytorch import ToTensorV2
 from PIL import Image
 from torch.utils.data import Dataset
 
-
 class BirdDataset(Dataset):
     def __init__(
         self,
@@ -25,7 +24,7 @@ class BirdDataset(Dataset):
         else:
             self.dataframe = dataframe  # test dataset
         self.label_map = label_map
-
+        self.image_size = image_size
         if transforms:
             self.transforms = transforms
         else:
@@ -41,6 +40,9 @@ class BirdDataset(Dataset):
             self.dataframe["label"][index],
         )
         img = np.asarray(Image.open(img_path).convert("RGB"))
+        H, W, C = img.shape
+        if min(H, W) < self.image_size:
+            img = A.SmallestMaxSize(self.image_size)(image=img)["image"]
         label = self.label_map[species]
         img = self.transforms(image=img)["image"]
         return {"image": img, "label": label, "species": species}
