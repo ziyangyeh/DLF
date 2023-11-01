@@ -1,0 +1,138 @@
+\begin{thebibliography}{10}\itemsep=-1pt
+
+\bibitem{buslaev2020albumentations}
+Alexander Buslaev, Vladimir~I Iglovikov, Eugene Khvedchenya, Alex Parinov, Mikhail Druzhinin, and Alexandr~A Kalinin.
+\newblock Albumentations: fast and flexible image augmentations.
+\newblock {\em Information}, 11(2):125, 2020.
+
+\bibitem{dong2018triplet}
+Xingping Dong and Jianbing Shen.
+\newblock Triplet loss in siamese network for object tracking.
+\newblock In {\em Proceedings of the European conference on computer vision (ECCV)}, pages 459--474, 2018.
+
+\bibitem{dosovitskiy2020image}
+Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly, et~al.
+\newblock An image is worth 16x16 words: Transformers for image recognition at scale.
+\newblock {\em arXiv preprint arXiv:2010.11929}, 2020.
+
+\bibitem{he2016deep}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In {\em Proceedings of the IEEE conference on computer vision and pattern recognition}, pages 770--778, 2016.
+
+\bibitem{hermans2017defense}
+Alexander Hermans, Lucas Beyer, and Bastian Leibe.
+\newblock In defense of the triplet loss for person re-identification.
+\newblock {\em arXiv preprint arXiv:1703.07737}, 2017.
+
+\bibitem{huang2017snapshot}
+Gao Huang, Yixuan Li, Geoff Pleiss, Zhuang Liu, John~E. Hopcroft, and Kilian~Q. Weinberger.
+\newblock Snapshot ensembles: Train 1, get m for free, 2017.
+
+\bibitem{islam2019bird}
+Shazzadul Islam, Sabit Ibn~Ali Khan, Md~Minhazul Abedin, Khan~Mohammad Habibullah, and Amit~Kumar Das.
+\newblock Bird species classification from an image using vgg-16 network.
+\newblock In {\em Proceedings of the 7th International Conference on Computer and Communications Management}, pages 38--42, 2019.
+
+\bibitem{izmailov2018averaging}
+Pavel Izmailov, Dmitrii Podoprikhin, Timur Garipov, Dmitry Vetrov, and Andrew~Gordon Wilson.
+\newblock Averaging weights leads to wider optima and better generalization.
+\newblock {\em arXiv preprint arXiv:1803.05407}, 2018.
+
+\bibitem{kalamkar2019study}
+Dhiraj Kalamkar, Dheevatsa Mudigere, Naveen Mellempudi, Dipankar Das, Kunal Banerjee, Sasikanth Avancha, Dharma~Teja Vooturi, Nataraj Jammalamadaka, Jianyu Huang, Hector Yuen, Jiyan Yang, Jongsoo Park, Alexander Heinecke, Evangelos Georganas, Sudarshan Srinivasan, Abhisek Kundu, Misha Smelyanskiy, Bharat Kaul, and Pradeep Dubey.
+\newblock A study of bfloat16 for deep learning training, 2019.
+
+\bibitem{khosla2020supervised}
+Prannay Khosla, Piotr Teterwak, Chen Wang, Aaron Sarna, Yonglong Tian, Phillip Isola, Aaron Maschinot, Ce Liu, and Dilip Krishnan.
+\newblock Supervised contrastive learning.
+\newblock {\em Advances in neural information processing systems}, 33:18661--18673, 2020.
+
+\bibitem{kingma2014adam}
+Diederik~P Kingma and Jimmy Ba.
+\newblock Adam: A method for stochastic optimization.
+\newblock {\em arXiv preprint arXiv:1412.6980}, 2014.
+
+\bibitem{liu2022swin}
+Ze Liu, Han Hu, Yutong Lin, Zhuliang Yao, Zhenda Xie, Yixuan Wei, Jia Ning, Yue Cao, Zheng Zhang, Li Dong, et~al.
+\newblock Swin transformer v2: Scaling up capacity and resolution.
+\newblock In {\em Proceedings of the IEEE/CVF conference on computer vision and pattern recognition}, pages 12009--12019, 2022.
+
+\bibitem{liu2021swin}
+Ze Liu, Yutong Lin, Yue Cao, Han Hu, Yixuan Wei, Zheng Zhang, Stephen Lin, and Baining Guo.
+\newblock Swin transformer: Hierarchical vision transformer using shifted windows.
+\newblock In {\em Proceedings of the IEEE/CVF international conference on computer vision}, pages 10012--10022, 2021.
+
+\bibitem{loshchilov2016sgdr}
+Ilya Loshchilov and Frank Hutter.
+\newblock Sgdr: Stochastic gradient descent with warm restarts.
+\newblock {\em arXiv preprint arXiv:1608.03983}, 2016.
+
+\bibitem{loshchilov2017decoupled}
+Ilya Loshchilov and Frank Hutter.
+\newblock Decoupled weight decay regularization.
+\newblock {\em arXiv preprint arXiv:1711.05101}, 2017.
+
+\bibitem{loshchilov2018fixing}
+Ilya Loshchilov and Frank Hutter.
+\newblock Fixing weight decay regularization in adam.
+\newblock {\em arXiv preprint arXiv:1711.05101v2}, 2018.
+
+\bibitem{micikevicius2018mixed}
+Paulius Micikevicius, Sharan Narang, Jonah Alben, Gregory Diamos, Erich Elsen, David Garcia, Boris Ginsburg, Michael Houston, Oleksii Kuchaiev, Ganesh Venkatesh, and Hao Wu.
+\newblock Mixed precision training, 2018.
+
+\bibitem{ragib2020pakhichini}
+Kazi~Md Ragib, Raisa~Taraman Shithi, Shihab~Ali Haq, Md Hasan, Kazi~Mohammed Sakib, and Tanjila Farah.
+\newblock Pakhichini: Automatic bird species identification using deep learning.
+\newblock In {\em 2020 Fourth world conference on smart trends in systems, security and sustainability (WorldS4)}, pages 1--6. IEEE, 2020.
+
+\bibitem{ramachandran2017searching}
+Prajit Ramachandran, Barret Zoph, and Quoc~V. Le.
+\newblock Searching for activation functions, 2017.
+
+\bibitem{roslan2017color}
+Rosniza Roslan, Nur~Amalina Nazery, Nursuriati Jamil, and Raseeda Hamzah.
+\newblock Color-based bird image classification using support vector machine.
+\newblock In {\em 2017 IEEE 6th Global Conference on Consumer Electronics (GCCE)}, pages 1--5. IEEE, 2017.
+
+\bibitem{ruder2016overview}
+Sebastian Ruder.
+\newblock An overview of gradient descent optimization algorithms.
+\newblock {\em arXiv preprint arXiv:1609.04747}, 2016.
+
+\bibitem{simonyan2014very}
+Karen Simonyan and Andrew Zisserman.
+\newblock Very deep convolutional networks for large-scale image recognition.
+\newblock {\em arXiv preprint arXiv:1409.1556}, 2014.
+
+\bibitem{smith2017cyclical}
+Leslie~N. Smith.
+\newblock Cyclical learning rates for training neural networks, 2017.
+
+\bibitem{suthaharan2016support}
+Shan Suthaharan and Shan Suthaharan.
+\newblock Support vector machine.
+\newblock {\em Machine learning models and algorithms for big data classification: thinking with examples for effective learning}, pages 207--235, 2016.
+
+\bibitem{tan2019efficientnet}
+Mingxing Tan and Quoc Le.
+\newblock Efficientnet: Rethinking model scaling for convolutional neural networks.
+\newblock In {\em International conference on machine learning}, pages 6105--6114. PMLR, 2019.
+
+\bibitem{vaswani2017attention}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan~N Gomez, {\L}ukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need.
+\newblock {\em Advances in neural information processing systems}, 30, 2017.
+
+\bibitem{weiss2016survey}
+Karl Weiss, Taghi~M Khoshgoftaar, and DingDing Wang.
+\newblock A survey of transfer learning.
+\newblock {\em Journal of Big data}, 3(1):1--40, 2016.
+
+\bibitem{zhuang2020comprehensive}
+Fuzhen Zhuang, Zhiyuan Qi, Keyu Duan, Dongbo Xi, Yongchun Zhu, Hengshu Zhu, Hui Xiong, and Qing He.
+\newblock A comprehensive survey on transfer learning.
+\newblock {\em Proceedings of the IEEE}, 109(1):43--76, 2020.
+
+\end{thebibliography}

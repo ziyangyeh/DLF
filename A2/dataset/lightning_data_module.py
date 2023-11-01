@@ -12,18 +12,18 @@ from utils import image_aug
 class LitDataModule(LightningDataModule):
     def __init__(
         self,
-        cfg: OmegaConf,
+        data_cfg: OmegaConf,
     ):
         super(LitDataModule, self).__init__()
         self.save_hyperparameters()
-        self.dataset = BirdDatasetTriplet if cfg.dataset.triplet else BirdDataset
-        self.dataframe = pd.read_csv(cfg.dataset.csv_path)
-        self.label_map = {k: idx for idx, k in enumerate(np.sort(np.loadtxt(cfg.dataset.label_map, dtype=str)))}
-        self.image_size = cfg.dataset.image_size
-        self.batch_size = cfg.dataloader.batch_size
-        self.num_workers = cfg.dataloader.num_workers
-        self.transform = image_aug(cfg.dataset.image_size, cfg.dataset.aug_level) if cfg.dataset.transform else None
-        # self.save_hyperparameters(ignore=["cfg"])
+        self.dataset = BirdDatasetTriplet if data_cfg.dataset.triplet else BirdDataset
+        self.dataframe = pd.read_csv(data_cfg.dataset.csv_path)
+        self.label_map = {k: idx for idx, k in enumerate(np.sort(np.loadtxt(data_cfg.dataset.label_map, dtype=str)))}
+        self.image_size = data_cfg.dataset.image_size
+        self.batch_size = data_cfg.dataloader.batch_size
+        self.num_workers = data_cfg.dataloader.num_workers
+        self.transform = image_aug(data_cfg.dataset.image_size, data_cfg.dataset.aug_level) if data_cfg.dataset.transform else None
+        # self.save_hyperparameters(ignore=["data_cfg"])
     def get_num_classes(self):
         return len(self.label_map)
     def setup(self, stage: Optional[str] = None):
@@ -70,10 +70,10 @@ class LitDataModule(LightningDataModule):
         )
 
 if __name__ == "__main__":
-    cfg = OmegaConf.load("config/default.yaml")
-    cfg.data.dataset.triplet = True
-    print(cfg)
-    litdm = LitDataModule(cfg.data)
+    data_cfg = OmegaConf.load("config/default.yaml")
+    data_cfg.data.dataset.triplet = True
+    print(data_cfg)
+    litdm = LitDataModule(data_cfg.data)
     litdm.setup()
     dl = litdm.train_dataloader()
     batch = next(iter(dl))
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     print(batch["label"].shape)
     print(batch["species"])
 
-    litdm = LitDataModule(cfg.data)
+    litdm = LitDataModule(data_cfg.data)
     litdm.setup()
     dl = litdm.train_dataloader()
     batch = next(iter(dl))

@@ -22,26 +22,31 @@ class LitModule(LightningModule):
             num_classes=model_cfg.num_classes,
             encoder_name=model_cfg.encoder.name,
             pretrained=model_cfg.encoder.pretrained,
-            features_only=True if self.triplet else False,
+            triplet=model_cfg.triplet.use,
+            features_only=model_cfg.triplet.features_only,
             skip_connection=model_cfg.triplet.skip_connection,
             dropout=model_cfg.encoder.drop_rate,
+            dropout_path=model_cfg.encoder.drop_path_rate,
             init=model_cfg.triplet.init,
         )
-        if model_cfg.encoder.freeze_encoder:
+        if model_cfg.encoder.freeze_encoder and (not model_cfg.triplet.features_only):
             if model_cfg.encoder.name.startswith("resnet"):
-                # timm resnet dont have a head, just linear
-                for param in self.model.parameters():
-                    param.requires_grad = False
-                self.model.encoder.fc.weight.requires_grad = True
-                self.model.encoder.fc.bias.requires_grad = True
-                print("training model.fc.weight")
-                print("training model.fc.bias")
+                indicator = "fc"
+            elif model_cfg.encoder.name.startswith("efficientnet"):
+                indicator = "classifier"
             else:
-                for name, para in self.model.named_parameters():
-                    if "head" not in name:
-                        para.requires_grad_(False)
-                    else:
-                        print("training {}".format(name))
+                indicator = "head"
+            for name, para in self.model.named_parameters():
+                if indicator not in name:
+                    para.requires_grad_(False)
+                else:
+                    print("training {}".format(name))
+        elif model_cfg.encoder.freeze_encoder and model_cfg.triplet.features_only:
+            for name, para in self.model.named_parameters():
+                if "head" not in name:
+                    para.requires_grad_(False)
+                else:
+                    print("training {}".format(name))
         if self.triplet:
             distance_fn = nn.PairwiseDistance() if model_cfg.triplet.distance == "l2" else nn.CosineSimilarity()
             self.triplet_loss_fn = nn.TripletMarginWithDistanceLoss(distance_function=distance_fn, swap=True)
@@ -83,9 +88,12 @@ class LitModule(LightningModule):
     #     return self(batch)
     def _step(self, batch: Dict[str, torch.Tensor], step: str) -> torch.Tensor:
         outputs = self(batch)
+        if not isinstance(outputs, tuple):
+            outputs_c = outputs.clone().detach()
         if self.triplet:
-            outputs, positives, negatives = outputs
-            _triplet_loss = self.triplet_loss_fn(outputs, positives, negatives)
+            outputs, anchor, positives, negatives = outputs
+            outputs_c = outputs.clone().detach()
+            _triplet_loss = self.triplet_loss_fn(anchor, positives, negatives)
             self.log(f"{step}_triplet_loss", _triplet_loss, sync_dist=True, batch_size=self.batch_size)
             _ce_loss = self.ce_loss_fn(outputs, batch["label"])
             self.log(f"{step}_ce_loss", _ce_loss, sync_dist=True, batch_size=self.batch_size)
@@ -95,14 +103,14 @@ class LitModule(LightningModule):
             loss = self.ce_loss_fn(outputs, batch["label"])
             self.log(f"{step}_loss", loss, sync_dist=True, prog_bar=True, batch_size=self.batch_size)
         with torch.no_grad():
-            _acc = self.accuracy_fn(outputs, batch["label"])
+            _acc = self.accuracy_fn(outputs_c, batch["label"])
             self.log(f"{step}_acc", _acc, sync_dist=True, prog_bar=True, batch_size=self.batch_size)
-            _prec = self.precision_fn(outputs, batch["label"])
+            _prec = self.precision_fn(outputs_c, batch["label"])
             self.log(f"{step}_precision", _prec, sync_dist=True, batch_size=self.batch_size)
-            _recall = self.recall_fn(outputs, batch["label"])
+            _recall = self.recall_fn(outputs_c, batch["label"])
             self.log(f"{step}_recall", _recall, sync_dist=True, batch_size=self.batch_size)
-            _spec = self.specificity_fn(outputs, batch["label"])
+            _spec = self.specificity_fn(outputs_c, batch["label"])
             self.log(f"{step}_specificity", _spec, sync_dist=True, batch_size=self.batch_size)
-            _f1 = self.f1score_fn(outputs, batch["label"])
+            _f1 = self.f1score_fn(outputs_c, batch["label"])
             self.log(f"{step}_f1score", _f1, sync_dist=True, batch_size=self.batch_size)
         return loss

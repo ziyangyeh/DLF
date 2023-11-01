@@ -1,0 +1,56 @@
+\backcite {roslan2017color}{{1}{2.1}{subsection.2.1}}
+\backcite {suthaharan2016support}{{1}{2.1}{subsection.2.1}}
+\backcite {ragib2020pakhichini}{{2}{2.2}{subsection.2.2}}
+\backcite {he2016deep}{{2}{2.2}{subsection.2.2}}
+\backcite {islam2019bird}{{2}{2.3}{subsection.2.3}}
+\backcite {simonyan2014very}{{2}{2.3}{subsection.2.3}}
+\backcite {suthaharan2016support}{{2}{2.3}{subsection.2.3}}
+\backcite {simonyan2014very}{{2}{4.1.1}{subsubsection.4.1.1}}
+\backcite {simonyan2014very}{{2}{4.1.1}{subsubsection.4.1.1}}
+\backcite {simonyan2014very}{{2}{3}{figure.caption.3}}
+\backcite {he2016deep}{{3}{4.1.2}{subsubsection.4.1.2}}
+\backcite {he2016deep, simonyan2014very}{{3}{4.1.2}{subsubsection.4.1.2}}
+\backcite {he2016deep}{{3}{4.1.2}{subsubsection.4.1.2}}
+\backcite {he2016deep}{{3}{4}{figure.caption.4}}
+\backcite {tan2019efficientnet}{{3}{4.1.3}{subsubsection.4.1.3}}
+\backcite {tan2019efficientnet}{{3}{4.1.3}{subsubsection.4.1.3}}
+\backcite {tan2019efficientnet, ramachandran2017searching}{{3}{4.1.3}{subsubsection.4.1.3}}
+\backcite {dosovitskiy2020image}{{3}{4.1.4}{subsubsection.4.1.4}}
+\backcite {vaswani2017attention}{{3}{4.1.4}{subsubsection.4.1.4}}
+\backcite {tan2019efficientnet}{{3}{5}{figure.caption.5}}
+\backcite {dosovitskiy2020image, vaswani2017attention}{{3}{4.1.4}{subsubsection.4.1.4}}
+\backcite {dosovitskiy2020image}{{3}{6}{figure.caption.6}}
+\backcite {vaswani2017attention}{{3}{6}{figure.caption.6}}
+\backcite {liu2021swin}{{3}{4.1.5}{subsubsection.4.1.5}}
+\backcite {liu2021swin, dosovitskiy2020image}{{3}{4.1.5}{subsubsection.4.1.5}}
+\backcite {vaswani2017attention}{{3}{4.1.5}{subsubsection.4.1.5}}
+\backcite {liu2021swin}{{4}{7}{figure.caption.7}}
+\backcite {liu2022swin, liu2021swin}{{4}{4.1.5}{figure.caption.7}}
+\backcite {liu2021swin, dosovitskiy2020image}{{4}{8}{figure.caption.8}}
+\backcite {liu2022swin, liu2021swin}{{4}{8}{figure.caption.8}}
+\backcite {khosla2020supervised, hermans2017defense, dong2018triplet}{{4}{4.2.1}{subsubsection.4.2.1}}
+\backcite {hermans2017defense, dong2018triplet}{{4}{4.2.1}{subsubsection.4.2.1}}
+\backcite {hermans2017defense, dong2018triplet}{{4}{4.2.1}{subsubsection.4.2.1}}
+\backcite {hermans2017defense}{{4}{9}{figure.caption.9}}
+\backcite {weiss2016survey, zhuang2020comprehensive}{{5}{4.2.2}{subsubsection.4.2.2}}
+\backcite {weiss2016survey, zhuang2020comprehensive, simonyan2014very, he2016deep, tan2019efficientnet, dosovitskiy2020image, liu2021swin, liu2022swin}{{5}{4.2.2}{subsubsection.4.2.2}}
+\backcite {buslaev2020albumentations}{{5}{4.2.3}{subsubsection.4.2.3}}
+\backcite {loshchilov2017decoupled, loshchilov2018fixing}{{5}{4.2.4}{subsubsection.4.2.4}}
+\backcite {ruder2016overview}{{5}{4.2.4}{subsubsection.4.2.4}}
+\backcite {kingma2014adam}{{5}{4.2.4}{subsubsection.4.2.4}}
+\backcite {loshchilov2017decoupled, loshchilov2018fixing}{{5}{4.2.4}{subsubsection.4.2.4}}
+\backcite {loshchilov2016sgdr}{{5}{4.2.4}{subsubsection.4.2.4}}
+\backcite {loshchilov2016sgdr}{{5}{4.2.4}{subsubsection.4.2.4}}
+\backcite {loshchilov2017decoupled, loshchilov2018fixing, kingma2014adam}{{5}{11}{figure.caption.11}}
+\backcite {izmailov2018averaging, huang2017snapshot}{{5}{4.2.5}{subsubsection.4.2.5}}
+\backcite {izmailov2018averaging}{{5}{4.2.5}{subsubsection.4.2.5}}
+\backcite {ruder2016overview}{{5}{4.2.5}{subsubsection.4.2.5}}
+\backcite {izmailov2018averaging, ruder2016overview}{{5}{4.2.5}{subsubsection.4.2.5}}
+\backcite {huang2017snapshot, izmailov2018averaging, smith2017cyclical}{{6}{12}{figure.caption.12}}
+\backcite {smith2017cyclical, huang2017snapshot}{{6}{4.2.6}{subsubsection.4.2.6}}
+\backcite {smith2017cyclical}{{6}{4.2.6}{subsubsection.4.2.6}}
+\backcite {micikevicius2018mixed}{{6}{4.2.7}{subsubsection.4.2.7}}
+\backcite {kalamkar2019study}{{6}{4.2.7}{subsubsection.4.2.7}}
+\backcite {micikevicius2018mixed, kalamkar2019study}{{6}{4.2.7}{subsubsection.4.2.7}}
+\backcite {micikevicius2018mixed}{{6}{13}{figure.caption.13}}
+\backcite {kalamkar2019study}{{6}{13}{figure.caption.13}}

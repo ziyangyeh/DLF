@@ -4,6 +4,7 @@ import timm
 import torch
 import torch.nn as nn
 from einops import pack, rearrange, unpack
+from .droppath import DropPath
 
 class TripletModel(nn.Module):
     def __init__(
@@ -11,13 +12,16 @@ class TripletModel(nn.Module):
         num_classes: int,
         encoder_name: str = "resnet34",
         pretrained: Optional[bool] = None,
+        triplet: Optional[bool] = None,
         features_only: Optional[bool] = None,
         skip_connection: Optional[bool] = None,
         dropout: Optional[float] = 0.0,
+        dropout_path: Optional[float] = 0.0,
         init: Optional[bool] = False,
         **kwargs,
     ) -> None:
         super(TripletModel, self).__init__()
+        self.triplet = triplet
         self.vit = True if encoder_name.startswith("vit") else False
         self.encoder = timm.create_model(
             model_name=encoder_name,
@@ -25,11 +29,12 @@ class TripletModel(nn.Module):
             num_classes=num_classes,
             features_only=features_only if not self.vit else None,
             drop_rate=dropout,
+            drop_path_rate=dropout_path,
         )
 
         self.features_only = features_only
+        self.skip_connection = skip_connection
         if features_only:
-            self.skip_connection = skip_connection
             if not self.vit:
                 feature_info = self.encoder.feature_info
                 last_dim = sum([item["num_chs"] for item in feature_info]) if skip_connection else list(feature_info)[-1]["num_chs"]
@@ -42,6 +47,7 @@ class TripletModel(nn.Module):
                 nn.BatchNorm1d(256),
                 nn.ReLU(inplace=True),
                 nn.Dropout(dropout if dropout else 0.0),
+                DropPath(dropout_path if dropout_path else None),
                 nn.Linear(256, 64, bias=False),
                 nn.BatchNorm1d(64),
                 nn.ReLU(inplace=True),
@@ -61,7 +67,23 @@ class TripletModel(nn.Module):
             elif self.init_type == "kaiming_normal":
                 torch.nn.init.kaiming_normal_(m.weight)
     def _forward_base(self, X):
-        return self.encoder(X)
+        if self.features_only:
+            if not self.vit:
+                x = self.encoder(X) if self.skip_connection else self.encoder(X)[-1]
+                if self.skip_connection:
+                    x = torch.concat(
+                        [self.pool_flat(rearrange(feats, "b h w c -> b c h w")) if feats.shape[1] == feats.shape[2] else self.pool_flat(feats) for feats in x],
+                        dim=1,
+                    )
+                else:
+                    x = self.pool_flat(rearrange(x, "b h w c -> b c h w")) if x.shape[1] == x.shape[2] else self.pool_flat(x)
+            else:
+                x = self.encoder(X)
+                x = self.pool_flat(x)
+            x = self.head(x)
+        else:
+            x = self.encoder(X)
+        return x
     def _forward_triplet_infer(self, anchor):
         x = self.encoder(anchor) if self.skip_connection else self.encoder(anchor)[-1]
         if self.skip_connection:
@@ -71,29 +93,30 @@ class TripletModel(nn.Module):
         x = self.head(x)
         return x, x, x
     def _forward_triplet_train(self, anchor, positive, negative):
-        x = [self.encoder(item) if self.skip_connection else self.encoder(item)[-1] for item in [anchor, positive, negative]]
-        if not self.vit:
-            if self.skip_connection:
-                x = [
-                    torch.concat(
-                        [
-                            self.pool_flat(rearrange(feats, "b h w c -> b c h w")) if feats.shape[1] == feats.shape[2] else self.pool_flat(feats)
-                            for feats in feats_lst
-                        ],
-                        dim=1,
-                    )
-                    for feats_lst in x
-                ]
+        if self.features_only:
+            if not self.vit:
+                x = [self.encoder(item) if self.skip_connection else self.encoder(item)[-1] for item in [anchor, positive, negative]]
+                if self.skip_connection:
+                    x = [
+                        torch.concat(
+                            [self.pool_flat(rearrange(feats, "b h w c -> b c h w")) if feats.shape[1] == feats.shape[2] else self.pool_flat(feats) for feats in feats_lst],
+                            dim=1,
+                        )
+                        for feats_lst in x
+                    ]
+                else:
+                    x = [self.pool_flat(rearrange(feats, "b h w c -> b c h w")) if feats.shape[1] == feats.shape[2] else self.pool_flat(feats) for feats in x]
             else:
-                x = [
-                    self.pool_flat(rearrange(feats, "b h w c -> b c h w")) if feats.shape[1] == feats.shape[2] else self.pool_flat(feats)
-                    for feats in x
-                ]
+                x = [self.encoder(item) for item in [anchor, positive, negative]]
+                x = [self.pool_flat(feats) for feats in x]
+            anchor, positive, negative = x
+            x = [self.head(item) for item in x]
         else:
-            x = [self.pool_flat(feats) for feats in x]
-        x = [self.head(item) for item in x]
-        anchor, positive, negative = x
-        return anchor, positive, negative
+            x = [self.encoder(item) for item in [anchor, positive, negative]]
+            anchor, positive, negative = x
+            x = anchor
+        x, _, _ = x
+        return x, anchor, positive, negative
     def _forward_triplet(self, anchor, positive=None, negative=None):
         if positive == None and negative == None:
             return self._forward_triplet_infer(anchor)
@@ -107,7 +130,11 @@ class TripletModel(nn.Module):
         positive=None,
         negative=None,
     ):
-        return self._forward_triplet(X, positive, negative) if self.features_only else self._forward_base(X)
+        if self.triplet:
+            X = self._forward_triplet(X, positive, negative)
+        else:
+            X = self._forward_base(X)
+        return X
 
 if __name__ == "__main__":
     _input0 = torch.randn(8, 3, 224, 224)

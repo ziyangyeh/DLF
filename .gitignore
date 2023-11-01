@@ -9,7 +9,7 @@ wandb
 A1/data
 A2/data
 A2/_data
-
+A2/csv_logs
 
 *.zip
 .lr_find*

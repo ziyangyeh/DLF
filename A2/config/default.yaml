@@ -5,26 +5,28 @@ model:
     name: "vit_tiny_patch16_224" # "vgg19" # "resnet34" # "swin_large_patch4_window7_224" # "vit_tiny_patch16_224"
     pretrained: True
     freeze_encoder: False
-    drop_rate: 0.5
+    drop_rate: 0.2
+    drop_path_rate: 0.2
   triplet:
-    use: True # if False, following params will not be unused.
+    use: True
+    features_only: True # vit does not need this
     skip_connection: True # vit does not need this
     distance: "cos" # cos, l2
     init: "xavier_uniform" # xavier_uniform, xavier_normal, kaiming_uniform, kaiming_normal
 train:
-  epochs: 20
+  epochs: 50
   accelerator: gpu
   devices: 1
   ddp: False
   precision: bf16-mixed # 16-mixed
   accumulate_grad_batches: 1
   swa: 
-    use: False # if False, next param will not be used; if True, conflict with user-defined scheduler
+    use: True # if False, next param will not be used; if True, conflict with user-defined scheduler
     swa_lr: 1e-3
   optimizer:
-    auto_lr_finder: False # if True, next param will not be used
+    auto_lr_finder: True # if True, next param will not be used
     lr: 1e-3
-    weight_decay: 5e-2
+    weight_decay: 1e-3
   scheduler:
     T_0: 5
     T_mult: 2
@@ -34,7 +36,7 @@ data:
     csv_path: "data/bird.csv"
     label_map: "data/bird.txt"
     image_size: 224
-    transform: True
+    transform: False
     aug_level: "easy"
   dataloader:
     batch_size: 256
