@@ -10,6 +10,8 @@ A1/data
 A2/data
 A2/_data
 A2/csv_logs
+A3/data/*
+A3/model.keras
 
 *.zip
 .lr_find*
