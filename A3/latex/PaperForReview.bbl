@@ -1,0 +1,88 @@
+\begin{thebibliography}{10}\itemsep=-1pt
+
+\bibitem{agrawal2013state}
+JG Agrawal, V Chourasia, and A Mittra.
+\newblock State-of-the-art in stock prediction techniques.
+\newblock {\em International Journal of Advanced Research in Electrical, Electronics and Instrumentation Engineering}, 2(4):1360--1366, 2013.
+
+\bibitem{chen2016xgboost}
+Tianqi Chen and Carlos Guestrin.
+\newblock Xgboost: A scalable tree boosting system.
+\newblock In {\em Proceedings of the 22nd acm sigkdd international conference on knowledge discovery and data mining}, pages 785--794, 2016.
+
+\bibitem{cho2014learning}
+Kyunghyun Cho, Bart Van~Merri{\"e}nboer, Caglar Gulcehre, Dzmitry Bahdanau, Fethi Bougares, Holger Schwenk, and Yoshua Bengio.
+\newblock Learning phrase representations using rnn encoder-decoder for statistical machine translation.
+\newblock {\em arXiv preprint arXiv:1406.1078}, 2014.
+
+\bibitem{ke2017lightgbm}
+Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma, Qiwei Ye, and Tie-Yan Liu.
+\newblock Lightgbm: A highly efficient gradient boosting decision tree.
+\newblock {\em Advances in neural information processing systems}, 30, 2017.
+
+\bibitem{memory2010long}
+Long Short-Term Memory.
+\newblock Long short-term memory.
+\newblock {\em Neural computation}, 9(8):1735--1780, 2010.
+
+\bibitem{pascanu2019construct}
+Razvan Pascanu, Caglar Gulcehre, Kyunghyun Cho, and Yoshua Bengio.
+\newblock How to construct deep recurrent neural networks. arxiv 2013.
+\newblock {\em arXiv preprint arXiv:1312.6026}, 2019.
+
+\bibitem{pedregosa2011scikit}
+Fabian Pedregosa, Ga{\"e}l Varoquaux, Alexandre Gramfort, Vincent Michel, Bertrand Thirion, Olivier Grisel, Mathieu Blondel, Peter Prettenhofer, Ron Weiss, Vincent Dubourg, et~al.
+\newblock Scikit-learn: Machine learning in python.
+\newblock {\em the Journal of machine Learning research}, 12:2825--2830, 2011.
+
+\bibitem{prokhorenkova2018catboost}
+Liudmila Prokhorenkova, Gleb Gusev, Aleksandr Vorobev, Anna~Veronika Dorogush, and Andrey Gulin.
+\newblock Catboost: unbiased boosting with categorical features.
+\newblock {\em Advances in neural information processing systems}, 31, 2018.
+
+\bibitem{rumelhart1986learning}
+David~E Rumelhart, Geoffrey~E Hinton, and Ronald~J Williams.
+\newblock Learning representations by back-propagating errors.
+\newblock {\em nature}, 323(6088):533--536, 1986.
+
+\bibitem{schuster1997bidirectional}
+Mike Schuster and Kuldip~K Paliwal.
+\newblock Bidirectional recurrent neural networks.
+\newblock {\em IEEE transactions on Signal Processing}, 45(11):2673--2681, 1997.
+
+\bibitem{shah2019stock}
+Dev Shah, Haruna Isah, and Farhana Zulkernine.
+\newblock Stock market analysis: A review and taxonomy of prediction techniques.
+\newblock {\em International Journal of Financial Studies}, 7(2):26, 2019.
+
+\bibitem{valipour2013comparison}
+Mohammad Valipour, Mohammad~Ebrahim Banihabib, and Seyyed Mahmood~Reza Behbahani.
+\newblock Comparison of the arma, arima, and the autoregressive artificial neural network models in forecasting the monthly inflow of dez dam reservoir.
+\newblock {\em Journal of hydrology}, 476:433--441, 2013.
+
+\bibitem{vaswani2017attention}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan~N Gomez, {\L}ukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need.
+\newblock {\em Advances in neural information processing systems}, 30, 2017.
+
+\bibitem{yang2020qlib}
+Xiao Yang, Weiqing Liu, Dong Zhou, Jiang Bian, and Tie-Yan Liu.
+\newblock Qlib: An ai-oriented quantitative investment platform.
+\newblock {\em arXiv preprint arXiv:2009.11189}, 2020.
+
+\bibitem{yu2019review}
+Yong Yu, Xiaosheng Si, Changhua Hu, and Jianxun Zhang.
+\newblock A review of recurrent neural networks: Lstm cells and network architectures.
+\newblock {\em Neural computation}, 31(7):1235--1270, 2019.
+
+\bibitem{zhang2023dive}
+Aston Zhang, Zachary~C Lipton, Mu Li, and Alexander~J Smola.
+\newblock {\em Dive into deep learning}.
+\newblock Cambridge University Press, 2023.
+
+\bibitem{zura2015101}
+Kakushadze Zura, L Geoffrey, and T Igor.
+\newblock 101 formulaic alphas.
+\newblock {\em Ssrn Electronic Journal}, 2015.
+
+\end{thebibliography}

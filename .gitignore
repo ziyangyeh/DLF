@@ -11,7 +11,8 @@ A2/data
 A2/_data
 A2/csv_logs
 A3/data/*
-A3/model.keras
+A3/model.weights.h5
+A3/catboost_info
 
 *.zip
 .lr_find*
